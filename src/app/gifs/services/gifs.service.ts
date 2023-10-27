@@ -1,18 +1,59 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+
+//const GIPHY_API_KEY: string = 'C5vMRwjuTyklvPgcRL6krehBAuMCu1i4';
 
 @Injectable({providedIn: 'root'})
 export class GifsService {
 
   private _tagsHistory: string[] = [];
+  private apiKey: string = 'C5vMRwjuTyklvPgcRL6krehBAuMCu1i4';
+  private serviceUrl: string = 'https://api.giphy.com/v1/gifs';
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   get tagsHistory(){
     return [...this._tagsHistory];
   }
 
-  searchTag(tag:string):void{
+  private organizeHistory(tag: string){
+    tag = tag.toLowerCase();
+    if(this._tagsHistory.includes(tag)){
+      this._tagsHistory=this._tagsHistory.filter((oldTag) => oldTag !== tag)
+    }
     this._tagsHistory.unshift(tag);
-    console.log(this.tagsHistory);
+    this._tagsHistory.slice(0,10);
   }
+
+  searchTag(tag:string):void{
+    if(tag.length === 0) return;
+
+    this.organizeHistory(tag);
+
+    const params = new HttpParams()
+      .set('api_key', this.apiKey)
+      .set('limit', '10')
+      .set('q', tag)
+
+    //Observable
+    this.http.get(`${this.serviceUrl}/search`,{params})
+      .subscribe(resp => {
+        console.log(resp);
+      });
+  }
+
+  /*async searchTag(tag:string):Promise<void>{
+    if(tag.length === 0) return;
+
+    this.organizeHistory(tag);*/
+
+    /*fetch('https://api.giphy.com/v1/gifs/search?api_key=C5vMRwjuTyklvPgcRL6krehBAuMCu1i4&q=hola&limit=10')
+      .then(resp => resp.json())
+      .then(data => console.log(data));*/
+
+    /*const resp = await fetch('https://api.giphy.com/v1/gifs/search?api_key=C5vMRwjuTyklvPgcRL6krehBAuMCu1i4&q=hola&limit=10')
+    const data = await resp.json();
+    console.log(data);*/
+
+  //}
 }

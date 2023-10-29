@@ -1,0 +1,8 @@
+height: 100%
+icono para cerrar el sidebar
+paginacion
+Title en gifs (no mostrar el bloque)
+
+Renderizar ya el tamaño:
+<shared-lazy-image
+  [url]="gif.images.downsized_medium.size"

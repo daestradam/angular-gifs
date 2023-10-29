@@ -6,3 +6,6 @@ Title en gifs (no mostrar el bloque)
 Renderizar ya el tamaño:
 <shared-lazy-image
   [url]="gif.images.downsized_medium.size"
+
+
+imagen loader no aparece en docs
